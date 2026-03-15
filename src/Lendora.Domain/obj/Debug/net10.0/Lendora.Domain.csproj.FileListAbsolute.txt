@@ -1,0 +1,12 @@
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\bin\Debug\net10.0\Lendora.Domain.deps.json
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\bin\Debug\net10.0\Lendora.Domain.dll
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\bin\Debug\net10.0\Lendora.Domain.pdb
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\Lendora.Domain.csproj.AssemblyReference.cache
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\Lendora.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\Lendora.Domain.AssemblyInfoInputs.cache
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\Lendora.Domain.AssemblyInfo.cs
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\Lendora.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\Lendora.Domain.dll
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\refint\Lendora.Domain.dll
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\Lendora.Domain.pdb
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Domain\obj\Debug\net10.0\ref\Lendora.Domain.dll

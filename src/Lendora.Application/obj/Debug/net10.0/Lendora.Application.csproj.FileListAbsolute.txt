@@ -1,0 +1,15 @@
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\bin\Debug\net10.0\Lendora.Application.deps.json
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\bin\Debug\net10.0\Lendora.Application.dll
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\bin\Debug\net10.0\Lendora.Application.pdb
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\bin\Debug\net10.0\Lendora.Domain.dll
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\bin\Debug\net10.0\Lendora.Domain.pdb
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora.Application.csproj.AssemblyReference.cache
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora.Application.AssemblyInfoInputs.cache
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora.Application.AssemblyInfo.cs
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora.Application.csproj.CoreCompileInputs.cache
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora..FC10A71B.Up2Date
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora.Application.dll
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\refint\Lendora.Application.dll
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\Lendora.Application.pdb
+C:\Users\Tunahan Ali Ozturk\OneDrive - PEAKUP\Desktop\Lendora\src\Lendora.Application\obj\Debug\net10.0\ref\Lendora.Application.dll
