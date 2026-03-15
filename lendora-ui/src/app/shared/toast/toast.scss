@@ -1,0 +1,18 @@
+// Slide-in from right animation for toast items.
+// Using a plain CSS @keyframes here because Tailwind v4 does not expose
+// a built-in slide-in-from-right animation utility by default.
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-item {
+  animation: toast-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}

@@ -1,0 +1,69 @@
+<!-- Toast container — fixed top-right, stacks downward -->
+<div
+  class="fixed top-4 right-4 z-50 flex flex-col gap-3 w-80 pointer-events-none"
+  aria-live="polite"
+  aria-atomic="false"
+  aria-label="Notifications"
+>
+  @for (notification of notificationService.notifications(); track notification.id) {
+    <div
+      class="toast-item pointer-events-auto flex items-start gap-3 bg-white shadow-lg rounded-lg border-l-4 px-4 py-3 w-full"
+      [class]="borderClass(notification)"
+      role="alert"
+      aria-atomic="true"
+    >
+      <!-- Icon -->
+      <div
+        class="flex items-center justify-center w-7 h-7 rounded-full shrink-0 mt-0.5"
+        [class]="iconBgClass(notification)"
+        aria-hidden="true"
+      >
+        <!-- Success checkmark -->
+        @if (notification.type === 'success') {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            [class]="iconColorClass(notification)"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.5"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+          </svg>
+        }
+        <!-- Error X -->
+        @if (notification.type === 'error') {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            [class]="iconColorClass(notification)"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.5"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        }
+      </div>
+
+      <!-- Message -->
+      <p class="flex-1 text-sm text-text-primary leading-5 pt-0.5">
+        {{ notification.message }}
+      </p>
+
+      <!-- Close button -->
+      <button
+        type="button"
+        (click)="dismiss(notification.id)"
+        class="shrink-0 flex items-center justify-center w-5 h-5 text-text-muted hover:text-text-secondary rounded transition-colors mt-0.5 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-500"
+        [attr.aria-label]="'Dismiss notification: ' + notification.message"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

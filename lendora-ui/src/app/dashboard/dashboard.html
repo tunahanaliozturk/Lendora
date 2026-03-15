@@ -1,0 +1,137 @@
+<div class="space-y-8">
+
+  <!-- Page header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-text-primary">Welcome back</h1>
+      <p class="mt-1 text-sm text-text-secondary">Here's what's happening with your loan portfolio today.</p>
+    </div>
+    <a
+      routerLink="/applications/new"
+      class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 transition-colors"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      New Application
+    </a>
+  </div>
+
+  <!-- Stats grid -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    @for (card of stats; track card.label) {
+      <div class="flex flex-col gap-4 rounded-xl bg-surface p-6 shadow-sm ring-1 ring-border">
+        <div class="flex items-start justify-between">
+          <p class="text-sm font-medium text-text-secondary">{{ card.label }}</p>
+          <span class="flex h-10 w-10 items-center justify-center rounded-lg {{ card.accentBg }}">
+            <svg class="h-5 w-5 {{ card.accentText }}" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="card.icon" />
+            </svg>
+          </span>
+        </div>
+        <div>
+          <p class="text-3xl font-semibold text-text-primary">{{ card.value }}</p>
+          <p class="mt-1 flex items-center gap-1 text-xs"
+             [class.text-success-600]="card.trendPositive"
+             [class.text-danger-600]="!card.trendPositive">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              @if (card.trendPositive) {
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+              } @else {
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6L9 12.75l4.306-4.307a11.95 11.95 0 015.814 5.519l2.74 1.22m0 0l-5.94 2.28m5.94-2.28l-2.28-5.941" />
+              }
+            </svg>
+            {{ card.trend }}
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Quick actions + Recent activity -->
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+    <!-- Quick actions -->
+    <div class="rounded-xl bg-surface p-6 shadow-sm ring-1 ring-border">
+      <h2 class="text-base font-semibold text-text-primary">Quick Actions</h2>
+      <p class="mt-1 text-sm text-text-secondary">Common tasks at a glance.</p>
+
+      <div class="mt-5 space-y-3">
+        <a
+          routerLink="/applications/new"
+          class="flex items-center gap-3 rounded-lg border border-border p-3.5 text-sm font-medium text-text-primary hover:bg-surface-secondary hover:border-primary-300 transition-colors group"
+        >
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-50 text-primary-600 group-hover:bg-primary-100 transition-colors">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </span>
+          <div>
+            <p class="font-medium text-text-primary">New Application</p>
+            <p class="text-xs text-text-secondary">Submit a loan application</p>
+          </div>
+        </a>
+
+        <a
+          routerLink="/applications"
+          class="flex items-center gap-3 rounded-lg border border-border p-3.5 text-sm font-medium text-text-primary hover:bg-surface-secondary hover:border-primary-300 transition-colors group"
+        >
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-success-50 text-success-600 group-hover:bg-green-100 transition-colors">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+          </span>
+          <div>
+            <p class="font-medium text-text-primary">View Applications</p>
+            <p class="text-xs text-text-secondary">Browse all loan applications</p>
+          </div>
+        </a>
+
+        <a
+          routerLink="/loans"
+          class="flex items-center gap-3 rounded-lg border border-border p-3.5 text-sm font-medium text-text-primary hover:bg-surface-secondary hover:border-primary-300 transition-colors group"
+        >
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-warning-50 text-warning-600 group-hover:bg-amber-100 transition-colors">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <div>
+            <p class="font-medium text-text-primary">Manage Loans</p>
+            <p class="text-xs text-text-secondary">View active loan accounts</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent activity -->
+    <div class="lg:col-span-2 rounded-xl bg-surface p-6 shadow-sm ring-1 ring-border">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-text-primary">Recent Activity</h2>
+          <p class="mt-1 text-sm text-text-secondary">Latest events across the platform.</p>
+        </div>
+        <a routerLink="/applications" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+          View all
+        </a>
+      </div>
+
+      <ul class="mt-5 space-y-4">
+        @for (item of recentActivity; track item.id) {
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full {{ activityIconBg(item.type) }}">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="activityIcon(item.type)" />
+              </svg>
+            </span>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm text-text-primary">{{ item.description }}</p>
+              <p class="mt-0.5 text-xs text-text-muted">{{ item.time }}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+
+  </div>
+</div>

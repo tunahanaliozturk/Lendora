@@ -1,0 +1,440 @@
+<div class="space-y-6">
+
+  <!-- Breadcrumb + header -->
+  <div>
+    <div class="flex items-center gap-2 text-sm text-text-secondary">
+      <a routerLink="/applications" class="hover:text-text-primary transition-colors">Applications</a>
+      <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+      <span class="text-text-primary font-medium">Application Detail</span>
+    </div>
+    <h1 class="mt-2 text-2xl font-bold text-text-primary">Application Detail</h1>
+  </div>
+
+  <!-- Loading skeleton -->
+  @if (isLoading()) {
+    <div class="rounded-xl bg-surface shadow-sm ring-1 ring-border p-6 space-y-4 animate-pulse">
+      <div class="h-5 w-48 rounded bg-slate-200"></div>
+      <div class="grid grid-cols-2 gap-4">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="space-y-1.5">
+            <div class="h-3 w-24 rounded bg-slate-200"></div>
+            <div class="h-4 w-36 rounded bg-slate-100"></div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Load error -->
+  @if (!isLoading() && loadError()) {
+    <div class="rounded-xl bg-danger-50 p-6 ring-1 ring-danger-500/20">
+      <div class="flex items-start gap-3">
+        <svg class="h-5 w-5 shrink-0 text-danger-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+        <div>
+          <p class="text-sm font-semibold text-danger-700">Failed to load application</p>
+          <p class="mt-0.5 text-sm text-danger-600">{{ loadError() }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Main content -->
+  @if (!isLoading() && application(); as app) {
+
+    <!-- Details card -->
+    <div class="rounded-xl bg-surface shadow-sm ring-1 ring-border overflow-hidden">
+
+      <!-- Card header -->
+      <div class="flex items-center justify-between border-b border-border px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div>
+            <p class="text-xs font-medium text-text-secondary uppercase tracking-wide">Application ID</p>
+            <p class="font-mono text-sm font-semibold text-text-primary">{{ app.id }}</p>
+          </div>
+        </div>
+        <span class="inline-flex items-center rounded-full px-3 py-1.5 text-sm font-semibold {{ statusBadgeClasses(app.status) }}">
+          {{ app.status }}
+        </span>
+      </div>
+
+      <!-- Details grid -->
+      <div class="grid grid-cols-1 gap-x-8 gap-y-5 p-6 sm:grid-cols-2">
+
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Customer ID</dt>
+          <dd class="mt-1 font-mono text-sm text-text-primary">{{ app.customerId }}</dd>
+        </div>
+
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Created</dt>
+          <dd class="mt-1 text-sm text-text-primary">{{ app.createdAt | date:'MMM d, y, h:mm a' }}</dd>
+        </div>
+
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Requested Amount</dt>
+          <dd class="mt-1 text-sm font-semibold text-text-primary">{{ app.requestedAmount | currency }}</dd>
+        </div>
+
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Requested Term</dt>
+          <dd class="mt-1 text-sm text-text-primary">{{ app.requestedTermMonths }} months</dd>
+        </div>
+
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Annual Income</dt>
+          <dd class="mt-1 text-sm text-text-primary">{{ app.annualIncome | currency }}</dd>
+        </div>
+
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Monthly Debt</dt>
+          <dd class="mt-1 text-sm text-text-primary">{{ app.existingMonthlyDebt | currency }}</dd>
+        </div>
+
+        <!-- Risk score with visual bar -->
+        <div class="sm:col-span-2">
+          <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Risk Score</dt>
+          @if (app.riskScore !== null) {
+            <dd class="mt-2">
+              <div class="flex items-center gap-3">
+                <span class="text-lg font-bold {{ riskScoreColor(app.riskScore) }}">{{ app.riskScore }}</span>
+                <div class="flex-1">
+                  <div class="h-2 rounded-full bg-slate-100">
+                    <div
+                      class="h-2 rounded-full transition-all duration-500 {{ riskBarColor(app.riskScore) }}"
+                      [style.width]="riskBarWidth(app.riskScore)"
+                    ></div>
+                  </div>
+                  <div class="mt-1 flex justify-between text-xs text-text-muted">
+                    <span>300</span>
+                    <span>Poor &nbsp;·&nbsp; Fair &nbsp;·&nbsp; Good &nbsp;·&nbsp; Excellent</span>
+                    <span>850</span>
+                  </div>
+                </div>
+              </div>
+            </dd>
+          } @else {
+            <dd class="mt-1 text-sm text-text-muted">Not yet evaluated</dd>
+          }
+        </div>
+
+        <!-- Approved fields — only when Approved -->
+        @if (app.status === 'Approved') {
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Approved Amount</dt>
+            <dd class="mt-1 text-sm font-semibold text-success-600">{{ app.approvedAmount | currency }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Approved Term</dt>
+            <dd class="mt-1 text-sm text-text-primary">{{ app.approvedTermMonths }} months</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Interest Rate</dt>
+            <dd class="mt-1 text-sm font-semibold text-text-primary">{{ app.interestRate }}%</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Approved By</dt>
+            <dd class="mt-1 text-sm text-text-primary">{{ app.approvedBy }}</dd>
+          </div>
+        }
+
+        <!-- Rejection reason — only when Rejected -->
+        @if (app.status === 'Rejected' && app.rejectionReason) {
+          <div class="sm:col-span-2">
+            <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Rejection Reason</dt>
+            <dd class="mt-1 rounded-lg bg-danger-50 px-4 py-3 text-sm text-danger-700">
+              {{ app.rejectionReason }}
+            </dd>
+          </div>
+        }
+
+        @if (app.updatedAt) {
+          <div class="sm:col-span-2">
+            <dt class="text-xs font-medium uppercase tracking-wide text-text-muted">Last Updated</dt>
+            <dd class="mt-1 text-sm text-text-secondary">{{ app.updatedAt | date:'MMM d, y, h:mm a' }}</dd>
+          </div>
+        }
+
+      </div>
+
+      <!-- Action footer -->
+      <div class="border-t border-border bg-surface-secondary px-6 py-4">
+
+        @if (app.status === 'Submitted') {
+          <div class="flex items-center gap-3">
+            <button
+              (click)="evaluateRisk()"
+              [disabled]="isEvaluating()"
+              class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              @if (isEvaluating()) {
+                <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Evaluating…
+              } @else {
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+                </svg>
+                Evaluate Risk
+              }
+            </button>
+            <p class="text-xs text-text-muted">Triggers the risk-scoring engine for this application.</p>
+          </div>
+        }
+
+        @if (app.status === 'RiskEvaluating') {
+          <div class="flex items-center gap-3">
+            <button
+              (click)="openApproveForm()"
+              [disabled]="showApproveForm()"
+              class="inline-flex items-center gap-2 rounded-lg bg-success-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-success-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Approve
+            </button>
+            <button
+              (click)="openRejectForm()"
+              [disabled]="showRejectForm()"
+              class="inline-flex items-center gap-2 rounded-lg bg-danger-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-danger-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Reject
+            </button>
+          </div>
+        }
+
+        @if (app.status === 'Approved') {
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-success-50">
+              <svg class="h-4 w-4 text-success-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-success-700">Loan Created</p>
+              @if (createdLoanId()) {
+                <a
+                  [routerLink]="['/loans', createdLoanId()]"
+                  class="text-xs text-primary-600 hover:text-primary-700 underline transition-colors"
+                >
+                  View Loan {{ createdLoanId() }}
+                </a>
+              } @else {
+                <p class="text-xs text-text-muted">This application has been approved and a loan account created.</p>
+              }
+            </div>
+          </div>
+        }
+
+        @if (app.status === 'Rejected') {
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-danger-50">
+              <svg class="h-4 w-4 text-danger-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-danger-700">This application has been rejected.</p>
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- Inline approve form -->
+    @if (showApproveForm()) {
+      <div class="rounded-xl bg-surface shadow-sm ring-1 ring-success-500/30 overflow-hidden">
+        <div class="border-b border-border bg-success-50 px-6 py-4">
+          <h2 class="text-base font-semibold text-success-700">Approve Application</h2>
+          <p class="mt-0.5 text-sm text-success-600">Set the final loan terms. These may differ from the customer's requested values.</p>
+        </div>
+
+        <form [formGroup]="approveForm" (ngSubmit)="submitApprove()" class="p-6 space-y-5">
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+            <!-- Approved By -->
+            <div class="sm:col-span-2">
+              <label for="approvedBy" class="block text-sm font-medium text-text-secondary">
+                Approved By <span class="text-danger-500">*</span>
+              </label>
+              <input
+                id="approvedBy"
+                type="text"
+                formControlName="approvedBy"
+                placeholder="underwriter username"
+                class="mt-1.5 block w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted shadow-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-200 focus:outline-none"
+                [class.border-danger-500]="isInvalid(approveForm, 'approvedBy')"
+              />
+              @if (isInvalid(approveForm, 'approvedBy')) {
+                <p class="mt-1 text-xs text-danger-600">{{ fieldError(approveForm, 'approvedBy') }}</p>
+              }
+            </div>
+
+            <!-- Interest Rate -->
+            <div>
+              <label for="interestRate" class="block text-sm font-medium text-text-secondary">
+                Interest Rate (%) <span class="text-danger-500">*</span>
+              </label>
+              <input
+                id="interestRate"
+                type="number"
+                formControlName="interestRate"
+                placeholder="e.g. 7.5"
+                step="0.1"
+                class="mt-1.5 block w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted shadow-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-200 focus:outline-none"
+                [class.border-danger-500]="isInvalid(approveForm, 'interestRate')"
+              />
+              @if (isInvalid(approveForm, 'interestRate')) {
+                <p class="mt-1 text-xs text-danger-600">{{ fieldError(approveForm, 'interestRate') }}</p>
+              }
+            </div>
+
+            <!-- Approved Amount -->
+            <div>
+              <label for="approvedAmount" class="block text-sm font-medium text-text-secondary">
+                Approved Amount ($) <span class="text-danger-500">*</span>
+              </label>
+              <input
+                id="approvedAmount"
+                type="number"
+                formControlName="approvedAmount"
+                placeholder="e.g. 25000"
+                class="mt-1.5 block w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted shadow-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-200 focus:outline-none"
+                [class.border-danger-500]="isInvalid(approveForm, 'approvedAmount')"
+              />
+              @if (isInvalid(approveForm, 'approvedAmount')) {
+                <p class="mt-1 text-xs text-danger-600">{{ fieldError(approveForm, 'approvedAmount') }}</p>
+              }
+            </div>
+
+            <!-- Approved Term -->
+            <div>
+              <label for="approvedTermMonths" class="block text-sm font-medium text-text-secondary">
+                Approved Term (months) <span class="text-danger-500">*</span>
+              </label>
+              <input
+                id="approvedTermMonths"
+                type="number"
+                formControlName="approvedTermMonths"
+                placeholder="e.g. 36"
+                class="mt-1.5 block w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted shadow-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-200 focus:outline-none"
+                [class.border-danger-500]="isInvalid(approveForm, 'approvedTermMonths')"
+              />
+              @if (isInvalid(approveForm, 'approvedTermMonths')) {
+                <p class="mt-1 text-xs text-danger-600">{{ fieldError(approveForm, 'approvedTermMonths') }}</p>
+              }
+            </div>
+
+          </div>
+
+          <div class="flex items-center justify-end gap-3 border-t border-border pt-4">
+            <button
+              type="button"
+              (click)="cancelForms()"
+              class="rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-text-secondary hover:bg-surface-secondary transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="isApproving()"
+              class="inline-flex items-center gap-2 rounded-lg bg-success-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-success-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              @if (isApproving()) {
+                <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Approving…
+              } @else {
+                Confirm Approval
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Inline reject form -->
+    @if (showRejectForm()) {
+      <div class="rounded-xl bg-surface shadow-sm ring-1 ring-danger-500/30 overflow-hidden">
+        <div class="border-b border-border bg-danger-50 px-6 py-4">
+          <h2 class="text-base font-semibold text-danger-700">Reject Application</h2>
+          <p class="mt-0.5 text-sm text-danger-600">Provide a clear reason — this will be stored on the application record.</p>
+        </div>
+
+        <form [formGroup]="rejectForm" (ngSubmit)="submitReject()" class="p-6 space-y-5">
+
+          <div>
+            <label for="rejectedBy" class="block text-sm font-medium text-text-secondary">
+              Rejected By <span class="text-danger-500">*</span>
+            </label>
+            <input
+              id="rejectedBy"
+              type="text"
+              formControlName="rejectedBy"
+              placeholder="underwriter username"
+              class="mt-1.5 block w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted shadow-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-200 focus:outline-none"
+              [class.border-danger-500]="isInvalid(rejectForm, 'rejectedBy')"
+            />
+            @if (isInvalid(rejectForm, 'rejectedBy')) {
+              <p class="mt-1 text-xs text-danger-600">{{ fieldError(rejectForm, 'rejectedBy') }}</p>
+            }
+          </div>
+
+          <div>
+            <label for="reason" class="block text-sm font-medium text-text-secondary">
+              Rejection Reason <span class="text-danger-500">*</span>
+            </label>
+            <textarea
+              id="reason"
+              formControlName="reason"
+              rows="3"
+              placeholder="e.g. Debt-to-income ratio exceeds policy limit of 43%."
+              class="mt-1.5 block w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-sm text-text-primary placeholder:text-text-muted shadow-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-200 focus:outline-none resize-none"
+              [class.border-danger-500]="isInvalid(rejectForm, 'reason')"
+            ></textarea>
+            @if (isInvalid(rejectForm, 'reason')) {
+              <p class="mt-1 text-xs text-danger-600">{{ fieldError(rejectForm, 'reason') }}</p>
+            }
+          </div>
+
+          <div class="flex items-center justify-end gap-3 border-t border-border pt-4">
+            <button
+              type="button"
+              (click)="cancelForms()"
+              class="rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-text-secondary hover:bg-surface-secondary transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="isRejecting()"
+              class="inline-flex items-center gap-2 rounded-lg bg-danger-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-danger-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              @if (isRejecting()) {
+                <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Rejecting…
+              } @else {
+                Confirm Rejection
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+  }
+
+</div>

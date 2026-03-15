@@ -1,0 +1,146 @@
+<!-- Page header -->
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h2 class="text-2xl font-semibold text-text-primary">Loans</h2>
+    <p class="text-sm text-text-secondary mt-0.5">Browse and manage active loan records.</p>
+  </div>
+
+  <!-- Search input -->
+  <div class="relative w-72">
+    <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none" aria-hidden="true">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4 text-text-muted"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+    </span>
+    <input
+      type="text"
+      placeholder="Search by customer ID..."
+      [value]="searchQuery()"
+      (input)="onSearch($event)"
+      class="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-lg bg-white text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500 transition"
+      aria-label="Filter loans by customer ID"
+    />
+  </div>
+</div>
+
+<!-- Loans table card -->
+<div class="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm" aria-label="Loans table">
+      <thead>
+        <tr class="border-b border-border bg-slate-50">
+          <th class="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wide">Loan ID</th>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wide">Customer ID</th>
+          <th class="px-6 py-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wide">Amount</th>
+          <th class="px-6 py-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wide">Interest Rate</th>
+          <th class="px-6 py-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wide">Monthly Payment</th>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wide">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wide">Start Date</th>
+          <th class="px-6 py-3 text-center text-xs font-semibold text-text-secondary uppercase tracking-wide">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (loan of filteredLoans(); track loan.id; let odd = $odd) {
+          <tr
+            class="border-b border-border last:border-0 hover:bg-primary-50/40 transition-colors"
+            [class.bg-slate-50]="odd"
+          >
+            <!-- Loan ID -->
+            <td class="px-6 py-4">
+              <span
+                class="font-mono text-xs text-text-secondary"
+                [title]="loan.id"
+              >
+                {{ truncateId(loan.id) }}
+              </span>
+            </td>
+
+            <!-- Customer ID -->
+            <td class="px-6 py-4">
+              <span class="font-medium text-text-primary">{{ loan.customerId }}</span>
+            </td>
+
+            <!-- Approved Amount -->
+            <td class="px-6 py-4 text-right font-medium text-text-primary tabular-nums">
+              {{ loan.approvedAmount | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+
+            <!-- Interest Rate -->
+            <td class="px-6 py-4 text-right text-text-secondary tabular-nums">
+              {{ loan.interestRate | number:'1.2-2' }}%
+            </td>
+
+            <!-- Monthly Payment -->
+            <td class="px-6 py-4 text-right font-medium text-text-primary tabular-nums">
+              {{ loan.monthlyPayment | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+
+            <!-- Status -->
+            <td class="px-6 py-4">
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [class]="statusClasses(loan.status)"
+              >
+                {{ loan.status }}
+              </span>
+            </td>
+
+            <!-- Start Date -->
+            <td class="px-6 py-4 text-text-secondary">
+              {{ loan.startDate | date:'mediumDate' }}
+            </td>
+
+            <!-- Actions -->
+            <td class="px-6 py-4 text-center">
+              <a
+                [routerLink]="['/loans', loan.id]"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors"
+                [attr.aria-label]="'View loan ' + loan.id"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                View
+              </a>
+            </td>
+          </tr>
+        }
+
+        @if (filteredLoans().length === 0) {
+          <tr>
+            <td colspan="8" class="px-6 py-16 text-center">
+              <div class="flex flex-col items-center gap-3 text-text-muted">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                </svg>
+                <p class="text-sm font-medium">No loans found</p>
+                <p class="text-xs">Try a different customer ID.</p>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer count -->
+  @if (filteredLoans().length > 0) {
+    <div class="px-6 py-3 border-t border-border bg-slate-50 flex items-center justify-between">
+      <p class="text-xs text-text-secondary">
+        Showing <span class="font-semibold text-text-primary">{{ filteredLoans().length }}</span> loan(s)
+      </p>
+    </div>
+  }
+</div>
